@@ -9,6 +9,9 @@ outputFolderName =  sys.argv[2]
 
 inputRootDir = sys.argv[1]
 
+print("Output folder name: " + outputFolderName)
+print("Input root dir: " + inputRootDir)
+
 # Nesscesary function
 def regex_text_before_jpg(text):
     regex = r'(.*)(\.jpg)'

@@ -25,20 +25,20 @@ for person_folder in vibe_folder:
         logging.info("PKL Model must be only one")
     # Load model
     model = joblib.load("./vibe-input/"+person_folder+"/"+pkl[0])
-    
+
     for key in list(model.keys()):
         logging.debug("Processing "+str(key))
         height = 2000
         width = 2000
 
-        logAngleLegLeft = []
-        logAngleLegRight = []
-
-        logAngleArmLeft = []
-        logAngleArmRight = []
-
-        logAngleShoulderArmLeft = []
-        logAngleShoulderArmRight = []
+        logsAngle={
+            "AngleLegLeft":[],
+            "AngleLegRight":[],
+            "AngleArmLeft":[],
+            "AngleArmRight" :[],
+            "AngleShoulderArmLeft" :[],
+            "AngleShoulderArmRight" :[]
+        }
 
         logging.debug(len(model[key]['joints3d']))
         for frameIndex in range(len(model[key]['joints3d'])):
@@ -64,52 +64,24 @@ for person_folder in vibe_folder:
 
             bodyDistance = distance(joints[39],joints[40])+distance(joints[40],joints[41])
 
-            logging.debug("Distance")
-            logging.debug("Sholder : {:.2f} cm".format(shoulderDistance*100))
-            logging.debug("")
-            logging.debug("ArmLeft : {:.2f} cm".format(armDistanceLeft*100))
-            logging.debug("ArmRight : {:.2f} cm".format(armDistanceRight*100))
-            logging.debug("")
-            logging.debug("#1 Check if arm angle are equivalent when walking")
-            logging.debug("AngleArmLeft : {:.2f} degree".format(angleArmLeft))
-            logging.debug("AngleArmRight : {:.2f} degree".format(angleArmRight))
-            logAngleArmLeft.append(angleLegLeft)
-            logAngleArmRight.append(angleLegRight)
-            logging.debug("")
-            logging.debug("#2 Check if arm neeb")
-            logging.debug("AngleSholderArmLeft {:.2f} degree".format(angleSholderArmLeft))
-            logging.debug("AngleSholderArmRight {:.2f} degree".format(angleSholderArmRight))
-            logAngleShoulderArmLeft.append(angleSholderArmLeft)
-            logAngleShoulderArmRight.append(angleSholderArmRight)
-            logging.debug("")
-            logging.debug("#3 Check if arm behind the back (Combine #2 #3)")
-            logging.debug("")
-            logging.debug("#4 Check if leg are fully stretch")
-            logging.debug("AngleLegLeft : {:.2f} degree".format(angleLegLeft))
-            logging.debug("AngleLegRight : {:.2f} degree".format(angleLegRight))
-            logAngleLegLeft.append(angleLegLeft)
-            logAngleLegRight.append(angleLegRight)
-            logging.debug("")
-            logging.debug("Hip : {:.2f} cm".format(hipDistance*100))
-            logging.debug("LegLeft : {:.2f} cm".format(legDistanceLeft*100))
-            logging.debug("LegRight : {:.2f} cm".format(legDistanceRight*100))
-            logging.debug("Body : {:.2f} cm".format(bodyDistance*100))
+            # Log
+            logsAngle["AngleArmLeft"].append(angleLegLeft)
+            logsAngle["AngleArmRight"].append(angleLegRight)
+            
+            logsAngle["AngleShoulderArmLeft"].append(angleSholderArmLeft)
+            logsAngle["AngleShoulderArmRight"].append(angleSholderArmRight)
+           
+            logsAngle["AngleLegLeft"].append(angleLegLeft)
+            logsAngle["AngleLegRight"].append(angleLegRight)
 
         # Make directory prepare for output
         if not os.path.exists(outputFolder+person_folder+"/"+str(key)):
             os.makedirs(outputFolder+person_folder+"/"+str(key))
 
-        logsAngle=[]
-        logsAngle.append(logAngleLegLeft)
-        logsAngle.append(logAngleLegRight)
-        logsAngle.append(logAngleArmLeft)
-        logsAngle.append(logAngleArmRight)
-        logsAngle.append(logAngleShoulderArmLeft)
-        logsAngle.append(logAngleShoulderArmRight)
-
 
         # Plot and save graph
-        for logAngle,logAngleTitle in zip(logsAngle, logsAngleMapping):
+        for logAngleTitle in logsAngle.keys():
+            logAngle = logsAngle[logAngleTitle]
             # Plot graph from log array
             plt.title(logAngleTitle)
             plt.plot(logAngle)
