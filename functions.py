@@ -20,6 +20,19 @@ def angle_3(point1,point2,point3):
     vector2 = vector(point3,point2)
     return angle(vector1,vector2)
 
+# Calculate angle between two vector
+def angle_2vector(vector1,vector2):
+    dot = np.dot(vector1,vector2)
+    det = np.linalg.norm(vector1)*np.linalg.norm(vector2)
+    return math.degrees(math.acos(dot/det))
+
+# Calculate normal vector of plane from three points
+def normal_vector(point1,point2,point3):
+    vector1 = vector(point1,point2)
+    vector2 = vector(point3,point2)
+    normal = np.cross(vector1,vector2)
+    return normal
+
 
 def flip_graph(graph):
     graph_flip = np.zeros(graph.shape)
