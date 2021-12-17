@@ -4,7 +4,6 @@ import joblib
 import matplotlib.pyplot as plt
 import os
 from functions import *
-from mapping import *
 import logging
 
 # Configuration
