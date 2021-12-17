@@ -39,13 +39,29 @@ for person_folder in vibe_folder:
             "AngleShoulderArmRight" :[]
         }
 
+        # 41 40 5
+        # 41 40 2
+
         logging.debug(len(model[key]['joints3d']))
         for frameIndex in range(len(model[key]['joints3d'])):
             joints =  model[key]['joints3d'][frameIndex]
 
             shoulderDistance = distance(joints[2],joints[5])
             angleSholderArmLeft = angle_3(joints[5],joints[2],joints[3]) -90
+            normalVectorSholderArmLeft = normal_vector(joints[5],joints[2],joints[3])
+            angleLocalXSholderArmLeft = angle_2vector(vector(joints[2],joints[3]),vector[joints[40],joints[41]])
+            angleLocalYSholderArmLeft = angle_2vector(vector(joints[2],joints[3]),vector[joints[40],joints[5]])
+            angleLocalZSholderArmLeft = angle_2vector(vector(joints[2],joints[3]),normalVectorSholderArmLeft)
+
             angleSholderArmRight = angle_3(joints[2],joints[5],joints[6]) -90
+            normalVectorSholderArmRight = normal_vector(joints[41],joints[40],joints[5])
+            angleLocalXSholderArmRight = angle_2vector(vector(joints[5],joints[6]),vector[joints[40],joints[41]])    
+            angleLocalYSholderArmRight = angle_2vector(vector(joints[5],joints[6]),vector[joints[40],joints[2]])
+            angleLocalZSholderArmRight = angle_2vector(vector(joints[5],joints[6]),normalVectorSholderArmRight)        
+
+            angleXSholderArmRight = angle_2vector(normalVectorSholderArmRight,[1,0,0])
+            angleYSholderArmRight = angle_2vector(normalVectorSholderArmRight,[0,1,0])
+            angleZSholderArmRight = angle_2vector(normalVectorSholderArmRight,[0,0,1])
 
             armDistanceLeft = distance(joints[2],joints[3])+distance(joints[3],joints[4])
             angleArmLeft = angle_3(joints[2],joints[3],joints[4])
